@@ -1,4 +1,4 @@
-##CTBr `C&T Brasil`
+# CTBr `C&T Brasil`
 
 `lattes.py` reúne duas funções escritas em Python 2.7 para automatizar a coleta e a extração de dados de CV Lattes. O dict de saída estabelece o padrão para os processamentos subsequentes. Um protótipo desenvolvido a partir dessa estrutura de dados pode ser mais facilmente incorporado ao sistema.
 

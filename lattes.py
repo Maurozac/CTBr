@@ -1,62 +1,30 @@
 # -*- coding: utf-8 -*-
 '''
-Extração de dados CV-Lattes - ver 1.0
+Extração de dados CV-Lattes - ver 2.0
 *************************************
 
-Nova estrutura da página, no ar desde 23 de julho 2012
-© Mauro Zackiewicz - maurozac@probabit.com.br
-
-Por favor comunique o autor se usar estas funções em seu código
-Fora isso, valem as regras e a ética do Open Source
+Em 2018 o CNPq liberou o acesso sem captcha de novo!
+© Mauro Zackiewicz - maurozac@gmail.com
     
 '''
-cv = '4727357182510680'
-#cv = '2136191211439968'
-#cv = '9437784541909444'
-#cv = '1388529283382853'
+id_lattes = '4727357182510680'
+id_lattes = '0522360394137728'
 
-ANO_ATUAL = 2012
+ANO_ATUAL = 2018
 
 # dependencias externas (instalar antes de usar)
-from BeautifulSoup import UnicodeDammit
 from lxml import html
 from lxml.html.clean import Cleaner
+import requests
+import time
 
 
-def bot_lattes(cv): 
-    import urllib2
-    import time
-
-    pre10 = 'http://buscatextual.cnpq.br/buscatextual/visualizacv.do?metodo=apresentar&id='
-    pre16 = 'http://lattes.cnpq.br/'
-    if len(cv) == 10:
-        url = pre10 + str(cv)
-    if len(cv) == 16:
-        url = pre16 + str(cv)
-
-    txdata = None
-    txheaders = {}
-    req = urllib2.Request(url, txdata, txheaders)
-    try:
-        resp = urllib2.urlopen(req)
-        pagina = resp.read()
-        converted = UnicodeDammit(pagina, isHTML=True)
-        if not converted.unicode:
-            raise UnicodeDecodeError('tentou: '.join(converted.triedEncodings))
-        pagina = converted.unicode
-        print '... OK: ', cv
-        #print pagina
-    except IOError, e:
-        erros=['erro','erro']
-        if hasattr(e, 'reason'):
-            erros[0]=e.reason
-        elif hasattr(e, 'code'):
-            erros[1]=e.code
-        e = str(erros[0])+ ' ' + str(erros[1])
-        print e
-    print '... ... ... bot OK'
-    time.sleep(0.4) # para não sobrecarregar o servidor do CNPq
-    return pagina 
+def bot_lattes(id_lattes): 
+    u'''Web Bot para recuperar cvs Lattes.'''
+    time.sleep(5) # para não sobrecarregar o servidor do CNPq
+    r = requests.get('http://lattes.cnpq.br/' + id_lattes)
+    print id_lattes, '... bot OK'
+    return r.text 
 
 
 def parserLattes(pagina):
@@ -750,5 +718,4 @@ def parserLattes(pagina):
         
     return cvdict
 
-#pagina = bot_lattes(cv)
-#parserLattes(pagina)
+cv = parserLattes(bot_lattes(id_lattes))
